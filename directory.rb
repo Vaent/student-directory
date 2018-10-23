@@ -2,13 +2,10 @@
 
 def try_load_students
   filename = ARGV.first
-  return if filename.nil?
-  if File.exists?(filename)
+  if filename
     load_students(filename)
-    puts "Loaded #{@students.count} entries from #{filename}"
   else
-    puts "Could not find the file #{filename}"
-    exit
+    load_students
   end
 end
 
@@ -73,9 +70,15 @@ def save_students
 end
 
 def load_students(filename = "students.csv")
-  file = File.open filename, "r"
-  file.readlines.each { |line| add_record( line.chomp.split(",") ) }
-  file.close
+  if File.exists?(filename)
+    file = File.open filename, "r"
+    file.readlines.each { |line| add_record( line.chomp.split(",") ) }
+    file.close
+    puts "Loaded entries from #{filename}; there are now #{@students.count} students"
+  else
+    puts "Could not find the file #{filename}"
+    exit
+  end
 end
 
 def add_record(name, cohort = "november")
