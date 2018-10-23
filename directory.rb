@@ -1,3 +1,26 @@
+def interactive_menu
+  students = []
+  loop do
+    puts "1. Input student details"
+    puts "2. Display list of students"
+    puts "9. Exit the program"
+    $stdout.print "Type a number followed by the return key: "
+    selection = gets.chomp
+    case selection
+      when "1"
+        students = input_students
+      when "2"
+        print_header
+        print(students)
+        print_footer(students)
+      when "9"
+        exit
+      else
+        puts "Selection not recognised..."
+    end
+  end
+end
+
 def input_students
   puts "Please enter the names of the students"
   puts "To finish, hit return twice"
@@ -24,7 +47,4 @@ def print_footer(names)
   puts "Overall, we have #{names.count} great students"
 end
 
-students = input_students
-print_header
-print(students)
-print_footer(students)
+interactive_menu
