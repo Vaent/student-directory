@@ -12,13 +12,12 @@ end
 def interactive_menu
   loop do
     print_menu
-    print "Type a number from the menu, followed by the return key: "
     get_command
   end
 end
 
 def print_menu
-  puts "1. Input student details"
+  puts "\n1. Input student details"
   puts "2. Display list of students"
   puts "3. Save list of students to file (students.csv)"
   puts "4. Load the saved list"
@@ -26,6 +25,7 @@ def print_menu
 end
 
 def get_command
+  print "\nType a number from the menu, followed by the return key: "
   case STDIN.gets.chomp
     when "1"
       input_students
@@ -38,7 +38,8 @@ def get_command
     when "9"
       exit
     else
-      puts "Selection not recognised..."
+      print "Selection not recognised..."
+      get_command
   end
 end
 
@@ -67,12 +68,16 @@ def save_students
     file.puts csv_line
   end
   file.close
+  puts "Save complete"
 end
 
 def load_students(filename = "students.csv")
   if File.exists?(filename)
     file = File.open filename, "r"
-    file.readlines.each { |line| add_record( line.chomp.split(",") ) }
+    file.readlines.each do |line|
+      name, cohort = line.chomp.split(",")
+      add_record(name, cohort)
+    end
     file.close
     puts "Loaded entries from #{filename}; there are now #{@students.count} students"
   else
