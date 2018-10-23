@@ -50,7 +50,7 @@ def input_students
   puts "To finish, hit return twice"
   name = STDIN.gets.chomp
   while !name.empty? do
-    @students << {name: name, cohort: :november}
+    add_record(name) 
     puts "Now we have #{@students.count} students"
     name = STDIN.gets.chomp
   end
@@ -74,11 +74,12 @@ end
 
 def load_students(filename = "students.csv")
   file = File.open filename, "r"
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(",")
-    @students << {name: name, cohort: cohort.to_sym}
-  end
+  file.readlines.each { |line| add_record( line.chomp.split(",") ) }
   file.close
+end
+
+def add_record(name, cohort = "november")
+  @students << {name: name, cohort: cohort.to_sym}
 end
 
 def print_header
