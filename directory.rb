@@ -8,6 +8,14 @@ def interactive_menu
   end
 end
 
+def print_menu
+  puts "1. Input student details"
+  puts "2. Display list of students"
+  puts "3. Save list of students to file (students.csv)"
+  puts "4. Load the saved list"
+  puts "9. Exit the program"
+end
+
 def get_command
   case gets.chomp
     when "1"
@@ -16,18 +24,13 @@ def get_command
       show_students
     when "3"
       save_students
+    when "4"
+      load_students
     when "9"
       exit
     else
       puts "Selection not recognised..."
   end
-end
-
-def print_menu
-  puts "1. Input student details"
-  puts "2. Display list of students"
-  puts "3. Save list of students to file (students.csv)"
-  puts "9. Exit the program"
 end
 
 def input_students
@@ -41,6 +44,12 @@ def input_students
   end
 end
 
+def show_students
+  print_header
+  print_students_list
+  print_footer
+end
+
 def save_students
   file = File.open("students.csv", "w")
   @students.each do |student|
@@ -51,10 +60,13 @@ def save_students
   file.close
 end
 
-def show_students
-  print_header
-  print_students_list
-  print_footer
+def load_students
+  file = File.open "students.csv", "r"
+  file.readlines.each do |line|
+    name, cohort = line.chomp.split(",")
+    @students << {name: name, cohort: cohort.to_sym}
+  end
+  file.close
 end
 
 def print_header
