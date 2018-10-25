@@ -1,9 +1,11 @@
 require 'io/console'
 
 @students = []
-@menu = ["1. Input student details", "2. Display list of students", "3. Save list of students to file",
-  "4. Load details from file", nil, nil, nil, nil, "9. Exit the program"]
-# @menu should only contain options numbered 1-9, otherwise single character input in get_command() must be changed
+@menu = [{command_char: "1", label: "1. Input student details", method: :input_students},
+  {command_char: "2", label: "2. Display list of students", method: :show_students},
+  {command_char: "3", label: "3. Save list of students to file", method: :save_students},
+  {command_char: "4", label: "4. Load details from file", method: :load_students},
+  {command_char: "9", label: "9. Exit the program", method: :exit}]
 
 def try_load_students
   load_students(ARGV.first ? ARGV.first : "students.csv")
@@ -17,28 +19,22 @@ def interactive_menu
 end
 
 def print_menu
-  puts "\n#{@menu.compact.join "\n"}"
+  puts
+  @menu.each {|entry| puts entry[:label] unless !entry}
 end
 
 def get_command
   print "\nType a number from the menu: "
   input = STDIN.getch
-  puts @menu[input.to_i - 1] if (input.to_i > 0 && @menu[input.to_i - 1])
-  case input
-    when "1"
-      input_students
-    when "2"
-      show_students
-    when "3"
-      save_students
-    when "4"
-      load_students
-    when "9"
-      exit
-    else
-      print "#{input}\nSelection not recognised..."
-      get_command
+  @menu.each do |option|
+    if option[:command_char] == input
+      puts option[:label]
+      self.send option[:method]
+      return
+    end
   end
+  print "#{input}\nSelection not recognised..."
+  get_command
 end
 
 def input_students
@@ -96,7 +92,7 @@ def add_record(name, cohort = "november")
 end
 
 def print_header
-  puts "The students of Villains Academy"
+  puts "\nThe students of Villains Academy"
   puts "-------------"
 end
 
