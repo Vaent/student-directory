@@ -29,7 +29,8 @@ def get_command
     when "3"
       save_students
     when "4"
-      load_students
+      puts "Which file?"
+      load_students(gets.chomp)
     when "9"
       exit
     else
@@ -77,7 +78,6 @@ def load_students(filename = "students.csv")
     puts "Loaded entries from #{filename}; there are now #{@students.count} students"
   else
     puts "Could not find the file #{filename}"
-    exit
   end
 end
 
