@@ -1,4 +1,9 @@
+require 'io/console'
+
 @students = []
+@menu = ["1. Input student details", "2. Display list of students", "3. Save list of students to file",
+  "4. Load details from file", nil, nil, nil, nil, "9. Exit the program"]
+# @menu should only contain options numbered 1-9, otherwise single character input in get_command() must be changed
 
 def try_load_students
   load_students(ARGV.first ? ARGV.first : "students.csv")
@@ -12,16 +17,14 @@ def interactive_menu
 end
 
 def print_menu
-  puts "\n1. Input student details"
-  puts "2. Display list of students"
-  puts "3. Save list of students to file"
-  puts "4. Load details from file"
-  puts "9. Exit the program"
+  puts "\n#{@menu.compact.join "\n"}"
 end
 
 def get_command
-  print "\nType a number from the menu, followed by the return key: "
-  case STDIN.gets.chomp
+  print "\nType a number from the menu: "
+  input = STDIN.getch
+  puts @menu[input.to_i - 1] if (input.to_i > 0 && @menu[input.to_i - 1])
+  case input
     when "1"
       input_students
     when "2"
@@ -33,7 +36,7 @@ def get_command
     when "9"
       exit
     else
-      print "Selection not recognised..."
+      print "#{input}\nSelection not recognised..."
       get_command
   end
 end
