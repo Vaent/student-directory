@@ -1,12 +1,7 @@
 @students = []
 
 def try_load_students
-  filename = ARGV.first
-  if filename
-    load_students(filename)
-  else
-    load_students
-  end
+  load_students(ARGV.first ? ARGV.first : "students.csv")
 end
 
 def interactive_menu
