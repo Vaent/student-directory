@@ -62,25 +62,25 @@ def get_filename
 end
 
 def save_students
-  file = File.open(get_filename, "w")
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
+  File.open(get_filename, "w") do |file|
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort]]
+      csv_line = student_data.join(",")
+      file.puts csv_line
+    end
   end
-  file.close
   puts "Save complete"
 end
 
 def load_students(filename = nil)
   filename = get_filename if !filename
   if File.exists?(filename)
-    file = File.open filename, "r"
-    file.readlines.each do |line|
-      name, cohort = line.chomp.split(",")
-      add_record(name, cohort)
+    File.open(filename) do |file|
+      file.readlines.each do |line|
+        name, cohort = line.chomp.split(",")
+        add_record(name, cohort)
+      end
     end
-    file.close
     puts "Loaded entries from #{filename}; there are now #{@students.count} students"
   else
     puts "Could not find the file #{filename}"
