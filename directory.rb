@@ -14,8 +14,8 @@ end
 def print_menu
   puts "\n1. Input student details"
   puts "2. Display list of students"
-  puts "3. Save list of students to file (students.csv)"
-  puts "4. Load the saved list"
+  puts "3. Save list of students to file"
+  puts "4. Load details from file"
   puts "9. Exit the program"
 end
 
@@ -29,8 +29,7 @@ def get_command
     when "3"
       save_students
     when "4"
-      puts "Which file?"
-      load_students(gets.chomp)
+      load_students
     when "9"
       exit
     else
@@ -56,8 +55,15 @@ def show_students
   print_footer
 end
 
+def get_filename
+  puts "Enter the file name and hit return; the .csv extension will be added automatically"
+  puts "If you hit return without entering a name, the default file will be used (students.csv)"
+  input = gets.chomp
+  return "#{input == "" ? "students" : input}.csv"
+end
+
 def save_students
-  file = File.open("students.csv", "w")
+  file = File.open(get_filename, "w")
   @students.each do |student|
     student_data = [student[:name], student[:cohort]]
     csv_line = student_data.join(",")
@@ -67,7 +73,8 @@ def save_students
   puts "Save complete"
 end
 
-def load_students(filename = "students.csv")
+def load_students(filename = nil)
+  filename = get_filename if !filename
   if File.exists?(filename)
     file = File.open filename, "r"
     file.readlines.each do |line|
