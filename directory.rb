@@ -1,4 +1,5 @@
 require 'io/console'
+require 'csv'
 
 @students = []
 @menu = [{command_char: "1", label: "1. Input student details", method: :input_students},
@@ -62,12 +63,8 @@ def get_filename
 end
 
 def save_students
-  File.open(get_filename, "w") do |file|
-    @students.each do |student|
-      student_data = [student[:name], student[:cohort]]
-      csv_line = student_data.join(",")
-      file.puts csv_line
-    end
+  CSV.open(get_filename, "w") do |file|
+    @students.each { |student| file << [student[:name], student[:cohort]] }
   end
   puts "Save complete"
 end
@@ -75,11 +72,9 @@ end
 def load_students(filename = nil)
   filename = get_filename if !filename
   if File.exists?(filename)
-    File.open(filename) do |file|
-      file.readlines.each do |line|
-        name, cohort = line.chomp.split(",")
-        add_record(name, cohort)
-      end
+    CSV.foreach(filename) do |line|
+      name, cohort = line
+      add_record(name, cohort)
     end
     puts "Loaded entries from #{filename}; there are now #{@students.count} students"
   else
