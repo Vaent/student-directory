@@ -46,17 +46,21 @@ def input_students
   unless (text_entered = gets.chomp) == ""
     @cohort = text_entered
   end
-  puts "Please enter the names of the students"
-  puts "To finish, hit return twice"
+  puts "Please enter the names of the students and hit return after each one"
+  puts "To finish, leave the line empty and hit return"
   name = STDIN.gets.chomp
   while !name.empty? do
     add_record(name)
-    puts "Now we have #{@students.count} students"
+    puts "Now we have #{@students.count} #{@students.count == 1 ? "student" : "students"}"
     name = STDIN.gets.chomp
   end
 end
 
 def show_students
+  if @students.count == 0
+    puts "The list is empty"
+    return
+  end
   print_header
   print_students_list
   print_footer
@@ -83,7 +87,7 @@ def load_students(filename = nil)
       name, cohort = line
       add_record(name, cohort)
     end
-    puts "Loaded entries from #{filename}; there are now #{@students.count} students"
+    puts "Loaded entries from #{filename}; list now contains #{@students.count} #{@students.count == 1 ? "student" : "students"}"
   else
     puts "Could not find the file #{filename}"
   end
@@ -103,7 +107,7 @@ def print_students_list
 end
 
 def print_footer
-  puts "Overall, we have #{@students.count} great students"
+  puts "Overall, we have #{@students.count} great #{@students.count == 1 ? "student" : "students"}"
 end
 
 try_load_students
