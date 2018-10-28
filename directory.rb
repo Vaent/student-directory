@@ -1,5 +1,6 @@
 require 'io/console'
 require 'csv'
+require 'date'
 
 @students = []
 @menu = [{command_char: "1", label: "1. Input student details", method: :input_students},
@@ -7,6 +8,7 @@ require 'csv'
   {command_char: "3", label: "3. Save list of students to file", method: :save_students},
   {command_char: "4", label: "4. Load details from file", method: :load_students},
   {command_char: "9", label: "9. Exit the program", method: :exit}]
+@cohort = Date.today.strftime("%B")
 
 def try_load_students
   load_students(ARGV.first ? ARGV.first : "students.csv")
@@ -39,11 +41,16 @@ def get_command
 end
 
 def input_students
+  puts "The cohort is currently set as: #{@cohort}"
+  puts "If you wish to enter students for another cohort, type the cohort name and hit return; otherwise, hit return without typing anything"
+  unless (text_entered = gets.chomp) == ""
+    @cohort = text_entered
+  end
   puts "Please enter the names of the students"
   puts "To finish, hit return twice"
   name = STDIN.gets.chomp
   while !name.empty? do
-    add_record(name) 
+    add_record(name)
     puts "Now we have #{@students.count} students"
     name = STDIN.gets.chomp
   end
@@ -82,7 +89,7 @@ def load_students(filename = nil)
   end
 end
 
-def add_record(name, cohort = "november")
+def add_record(name, cohort = @cohort)
   @students << {name: name, cohort: cohort.to_sym}
 end
 
